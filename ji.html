@@ -1,0 +1,87 @@
+<html>
+<title>Ovo je naslov</title>
+<body id = "l" style="background-image:url('i/preuzmi.jpg');">
+	<div id = "moj-tata" style="background-color:white; text-align:center;">
+		<p>Dobar dan</p>
+		<h1>Kako ste?</h1>
+		<h2>Neke srednje škole <br> u Zadru</h2>
+		
+		<a name="ducan">Dućan je tu negdje</a>
+		
+		<i>
+			<ol>
+				<li><b>Strukovna skola</b></li>
+				<li><i>Tehnicka skola</i></li>
+				<li>Ekonosmka skola</li>
+				<li>Gimnazija Vladimira Nazora</li>
+				<li>Obrtnicka skola</li>
+				<li>MIOC</li>
+			</ol>
+		</i>
+		
+		<ul>
+			<li>HTML</li>
+			<li>CSS</li>
+			<li>JavaScript</li>
+		</ul>
+		
+		<dl>
+			<dt>Hypertext markup language</dt>
+			<dd> HTML je jezik za označavanje sadržaja</dd>
+			<dt>CSS</dt>
+			<dd> CSS definira izgled HTML-a</dd>
+		</dl>
+		
+		<img src="babic.jpg" width="80%" height="35%">
+		
+		<hr>
+		<a href="i/vjezba.html" style="background-color:white; font-size:25px">Store (DMT in stock)</a>
+		<hr>
+		
+		<h1 style="font-size:15px;">anamarijafgoic@gmail.com</h1>
+		
+		<p>
+			Unsupervised and self-supervised learning,1 or learning without human-labeled data, is a longstanding challenge of machine learning. Recently, it has seen incredible success in language, as transformer2 models like BERT,3 GPT-2,4 RoBERTa,5 T5,6 and other variants78910 have achieved top performance on a wide array of language tasks. However, the same broad class of models has not been successful in producing strong features for image classification.11 Our work aims to understand and bridge this gap.
+
+Transformer models like BERT and GPT-2 are domain agnostic, meaning that they can be directly applied to 1-D sequences of any form. When we train GPT-2 on images unrolled into long sequences of pixels, which we call iGPT, we find that the model appears to understand 2-D image characteristics such as object appearance and category. This is evidenced by the diverse range of coherent image samples it generates, even without the guidance of human provided labels. As further proof, features from the model achieve state-of-the-art performance on a number of classification datasets and near state-of-the-art unsupervised accuracy[1] on ImageNet.
+		From language GPT to image GPT
+In language, unsupervised learning algorithms that rely on word prediction (like GPT-2 and BERT) have been extremely successful, achieving top performance on a wide array of language tasks. One possible reason for this success is that instances of downstream language tasks appear naturally in text: questions are often followed by answers (which could help with question-answering) and passages are often followed by summaries (which could help with summarization). In contrast, sequences of pixels do not clearly contain labels for the images they belong to.
+
+Even without this explicit supervision, there is still a reason why GPT-2 on images might work: a sufficiently large transformer trained on next pixel prediction might eventually learn to generate diverse[2] samples with clearly recognizable objects. Once it learns to do so, an idea known as “Analysis by Synthesis”2930[3] suggests that the model will also know about object categories. Many early generative models313233343536 were motivated by this idea, and more recently, BigBiGAN37 was an example which produced encouraging samples and features. In our work, we first show that better generative models achieve stronger classification performance. Then, through optimizing GPT-2 for generative capabilities, we achieve top-level classification performance in many settings, providing further evidence for analysis by synthesis.
+
+Towards general unsupervised learning
+Generative sequence modeling is a universal unsupervised learning algorithm: since all data types can be represented as sequences of bytes, a transformer can be directly applied to any data type without additional engineering. Our work tests the power of this generality by directly applying the architecture used to train GPT-2 on natural language to image generation. We deliberately chose to forgo hand coding any image specific knowledge in the form of convolutions38 or techniques like relative attention,39 sparse attention,40 and 2-D position embeddings.27
+
+As a consequence of its generality, our method requires significantly more compute to achieve competitive performance in the unsupervised setting. Indeed, contrastive methods41424344451323242512 are still the most computationally efficient methods for producing high quality features from images. However, in showing that an unsupervised transformer model is competitive with the best unsupervised convolutional nets,242512 we provide evidence that it is possible to trade off hand coded domain knowledge for compute. In new domains,4647 where there isn’t much knowledge to hand code, scaling compute seems an appropriate technique to test.
+
+Approach
+We train iGPT-S, iGPT-M, and iGPT-L, transformers containing 76M, 455M, and 1.4B parameters respectively, on ImageNet. We also train iGPT-XL[4], a 6.8 billion parameter transformer, on a mix of ImageNet and images from the web. Due to the large computational cost of modeling long sequences with dense attention, we train at the low resolutions of 32x32, 48x48, and 64x64.
+
+While it is tempting to work at even lower resolutions to further reduce compute cost, prior work has demonstrated that human performance on image classification begins to drop rapidly below these sizes.48 Instead, motivated by early color display palettes,49 we create our own 9-bit color palette to represent pixels. Using this palette yields an input sequence length 3 times shorter than the standard (R, G, B) palette, while still encoding color faithfully.
+
+Experimental results
+There are two methods we use to assess model performance, both of which involve a downstream classification task. The first, which we refer to as a linear probe, uses the trained model to extract features[5] from the images in the downstream dataset, and then fits a logistic regression to the labels. The second method fine-tunes[6] the entire model on the downstream dataset.
+
+Since next pixel prediction is not obviously relevant to image classification, features from the final layer may not be the most predictive of the object category. Our first result shows that feature quality is a sharply increasing, then mildly decreasing function of depth. This behavior suggests that a transformer generative model operates in two phases: in the first phase, each position gathers information from its surrounding context in order to build a contextualized image feature. In the second phase, this contextualized feature is used to solve the conditional next pixel prediction task. The observed two stage performance of our linear probes is reminiscent of another unsupervised neural net, the bottleneck autoencoder, which is manually designed so that features in the middle are used.
+		Given the resurgence of interest in unsupervised and self-supervised learning on ImageNet, we also evaluate the performance of our models using linear probes on ImageNet. This is an especially difficult setting, as we do not train at the standard ImageNet input resolution. Nevertheless, a linear probe on the 1536 features from the best layer of iGPT-L trained on 48x48 images yields 65.2% top-1 accuracy, outperforming AlexNet.
+
+Contrastive methods typically report their best results on 8192 features, so we would ideally evaluate iGPT with an embedding dimension of 8192 for comparison. However, training such a model is prohibitively expensive, so we instead concatenate features from multiple layers as an approximation. Unfortunately, our features tend to be correlated across layers, so we need more of them to be competitive. Taking 15360 features from 5 layers in iGPT-XL yields 72.0% top-1 accuracy, outperforming AMDIM, MoCo, and CPC v2, but still underperforming SimCLR by a decent margin.
+		Because masked language models like BERT have outperformed generative models on most language tasks, we also evaluate the performance of BERT on our image models. Instead of training our model to predict the next pixel given all preceding pixels, we mask out 15% of the pixels and train our model to predict them from the unmasked ones. We find that though linear probe performance on BERT models is significantly worse, they excel during fine-tuning:
+		While unsupervised learning promises excellent features without the need for human-labeled data, significant recent progress has been made under the more forgiving framework of semi-supervised learning, which allows for limited amounts of human-labeled data. Successful semi-supervised methods often rely on clever techniques such as consistency regularization, data augmentation, or pseudo-labeling, and purely generative-based approaches5455 have not been competitive for years. We evaluate iGPT-L[7] on a competitive benchmark for this sub-field and find that a simple linear probe on features from non-augmented images outperforms Mean Teacher56 and MixMatch,57 though it underperforms FixMatch
+		While we have shown that iGPT is capable of learning powerful image features, there are still significant limitations to our approach. Because we use the generic sequence transformer used for GPT-2 in language, our method requires large amounts of compute: iGPT-L was trained for roughly 2500 V100-days while a similarly performing MoCo24 model can be trained in roughly 70 V100-days.
+
+Relatedly, we model low resolution inputs using a transformer, while most self-supervised results use convolutional-based encoders which can easily consume inputs at high resolution. A new architecture, such as a domain-agnostic multiscale transformer, might be needed to scale further. Given these limitations, our work primarily serves as a proof-of-concept demonstration of the ability of large transformer-based language models to learn excellent unsupervised representations in novel domains, without the need for hardcoded domain knowledge. However, the significant resource cost to train these models and the greater accuracy of convolutional neural-network based methods precludes these representations from practical real-world applications in the vision domain.
+
+Finally, generative models can exhibit biases that are a consequence of the data they’ve been trained on. Many of these biases are useful, like assuming that a combination of brown and green pixels represents a branch covered in leaves, then using this bias to continue the image. But some of these biases will be harmful, when considered through a lens of fairness and representation. For instance, if the model develops a visual notion of a scientist that skews male, then it might consistently complete images of scientists with male-presenting people, rather than a mix of genders. We expect that developers will need to pay increasing attention to the data that they feed into their systems and to better understand how it relates to biases in trained models.
+
+Conclusion
+We have shown that by trading off 2-D knowledge for scale60 and by choosing predictive features from the middle of the network, a sequence transformer can be competitive with top convolutional nets for unsupervised image classification. Notably, we achieved our results by directly applying the GPT-2 language model to image generation. Our results suggest that due to its simplicity and generality, a sequence transformer given sufficient compute might ultimately be an effective way to learn excellent features in many domains.
+
+If you’re excited to work with us on this area of research, we’re hiring!
+		</p>
+		
+		<a href="#ducan">Skokni do dućana</a>
+		
+	</div>
+</body>
+</html>
