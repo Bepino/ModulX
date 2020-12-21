@@ -1,0 +1,38 @@
+body{
+    background-color: green;
+}
+
+
+
+h4,h3{
+    color: #c40e0e;
+}
+
+.row2{
+    font-weight: 600;
+    color: aliceblue;
+}
+
+.row1{
+    font-weight: 600;
+    color: aliceblue;
+}
+
+.img{
+    padding-right: 5%;
+    border-width: 630px;
+    margin-right: 10%;
+    align-items: center;
+}
+
+.r1t1{
+    width: 630px;
+}
+
+td{
+    width: 100%;
+    height: 100%;
+    border: 3px #c40e0e solid;
+    padding: 10px;
+    margin: 3%;
+}
